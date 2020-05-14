@@ -1,14 +1,15 @@
 # MZZB Server
+맛집족보 데이터베이스 백엔드 서버입니다
 
 ## DB Resource
 
-###Docker
+- Docker
 ```
 > ubuntu 18.04 기준
 sudo apt-get install docker
 sudo apt-get install docker.io
 ```
-###PostgreSQL
+- PostgreSQL
 ```
 > DB 이미지 생성
 docker run --name {컨테이너이름} -p {포트번호}:{포트번호} -e POSTGRES_PASSWORD={비밀번호} -d postgres
@@ -27,7 +28,9 @@ psql -d postgres -U postgres
 \dt
 ```
 
-## jar 배포
+## JAR
+
+- 배포 요약 
 ```
 > mvn 설치
 sudo apt-get install maven
@@ -36,5 +39,5 @@ sudo apt-get install maven
 mvn package
 
 > target 내 jar 실행
-nohup java -jar {jar 파일}
+nohup java -jar {jar 파일} &
 ```
