@@ -28,6 +28,21 @@ psql -d postgres -U postgres
 \dt
 ```
 
+## HTTPS 설정
+
+- keystore 생성 
+```
+> 프로젝트 디렉토리 내에서 다음 실행
+keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 4000
+```
+- properties 파일에 다음 내용 추가
+```
+server.ssl.key-store=keystore.p12
+server.ssl.key-store-password={비밀번호}
+server.ssl.key-store-type=PKCS12
+server.ssl.key-alias=tomcat
+```
+
 ## JAR
 
 - 배포 요약 
