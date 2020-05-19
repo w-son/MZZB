@@ -45,6 +45,7 @@ public class AppConfig {
 
             @Override
             public void run(ApplicationArguments args) throws Exception {
+                /*
                 String img = "http://t1.daumcdn.net/webtoon/op/f6df13cba138bce8e5526e71fd46ecb1d8433520";
                 addMatzip("국시와가래떡", "한식", "6000", img);
                 addMatzip("김피라", "한식", "8000", img);
@@ -60,6 +61,7 @@ public class AppConfig {
                 addTmi("프린트 충전 Q동 1층에서 가능한거 아시나요?");
                 addTmi("여자 휴게실과 남자 휴게실이 존재하는거 아시나요?");
                 addTmi( "신촌역에서 마포 8,9번을 타고 홍대 정문에서 내리면 등산 안 해도 괜찮아요~");
+                */
             }
 
         };

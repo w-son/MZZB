@@ -28,6 +28,9 @@ public class MatzipController {
     @GetMapping("/{id}")
     public ResponseEntity getMatzipById(@PathVariable("id") Integer id) {
         Optional<Matzip> matzip = matzipService.findOne(id);
+        if(matzip.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(matzip);
     }
 
