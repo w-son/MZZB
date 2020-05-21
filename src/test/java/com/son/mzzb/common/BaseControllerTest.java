@@ -25,7 +25,7 @@ public class BaseControllerTest {
     @Autowired
     protected MockMvc mockMvc;
 
-    // serializing
+    // serializing from DTO
     @Autowired
     protected ObjectMapper objectMapper;
 

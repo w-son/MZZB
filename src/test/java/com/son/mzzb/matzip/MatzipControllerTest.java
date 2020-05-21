@@ -4,15 +4,17 @@ import com.son.mzzb.common.BaseControllerTest;
 import com.son.mzzb.common.TestDescription;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.io.InputStream;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 public class MatzipControllerTest extends BaseControllerTest {
@@ -21,6 +23,65 @@ public class MatzipControllerTest extends BaseControllerTest {
     public void setup() {
         // given
         IntStream.range(0, 50).forEach(this::insertMatzip);
+    }
+
+    @Test
+    @TestDescription("맛집 정보 생성하기")
+    public void createMatzip() throws Exception {
+        // given
+        MatzipDto matzipDto = MatzipDto.builder()
+                .name("가미우동")
+                .foodType("일식")
+                .price("10000")
+                .imgLink("some image link")
+                .build();
+        // when & then
+        mockMvc.perform(post("/api/v1/matzip")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaTypes.HAL_JSON)
+                        .content(objectMapper.writeValueAsString(matzipDto)))
+                .andDo(print())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("id").exists())
+                .andExpect(jsonPath("_links.self").exists())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    @TestDescription("필수 입력 필드가 없는 경우")
+    public void createEmptyMatzip() throws Exception {
+        // given
+        MatzipDto matzipDto = MatzipDto.builder()
+                .name("가미우동")
+                .foodType("일식")
+                .build();
+        // when & then
+        mockMvc.perform(post("/api/v1/matzip")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(matzipDto)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @TestDescription("입력 필드가 잘못된 경우")
+    public void createWrongMatzip() throws Exception {
+        // given
+        MatzipDto matzipDto = MatzipDto.builder()
+                .name("가미우동")
+                .foodType("일식")
+                .price("가격")
+                .imgLink("some image link")
+                .build();
+        // when & then
+        mockMvc.perform(post("/api/v1/matzip")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(matzipDto)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("content[0].object").exists())
+                .andExpect(jsonPath("content[0].message").exists())
+                .andExpect(jsonPath("content[0].code").exists());
     }
 
     @Test
@@ -56,6 +117,7 @@ public class MatzipControllerTest extends BaseControllerTest {
         // when & then
         this.mockMvc.perform(get("/api/v1/matzip/{id}", 25))
                 .andDo(print())
+                .andExpect(jsonPath("_links.self").exists())
                 .andExpect(status().isOk());
     }
 

@@ -1,22 +1,26 @@
 package com.son.mzzb.matzip;
 
+import com.son.mzzb.common.ErrorsResource;
 import jdk.jfr.Event;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.*;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/api/v1/matzip", produces = MediaTypes.HAL_JSON_UTF8_VALUE)
@@ -24,16 +28,52 @@ import java.util.stream.Collectors;
 public class MatzipController {
 
     private final MatzipService matzipService;
+    private final MatzipValidator matzipValidator;
+    private final ModelMapper modelMapper;
 
     /*
-     - ResponseEntity의 응답 종류 : 200류 400류
-     - Resource로 최종 데이터를 감싸주고 리턴 해주자 : JsonUnwrapped, links 용이
-     - Resources로 리스트형 Resource 클래스 묶기 : 일반 리스트로 리턴시 Map 구조가 아닌 그냥 리스트, 확장성 부족
-       TODO : 불필요하게 키값으로 매핑되어있는 구조는 어떻게 해야할까
-     - PagedResources : assembler를 통해 page 정보(크기, 현재위치, 처음, 마지막 등) 및 이동 url을 링크형태로 제공
-                        Page객체를 Resources로 매핑시켜주는 역할이라고 생각하면 된다
+     * 요청 수신
+       - Dto를 통해 RequestBody의 내용을 Validate(@Valid 이나 Validator로)시킨 후에
+         로직을 수행하고 정상 처리 된 경우에만 수행하도록 한다
+
+     * 응답 송신
+       1) ResponseEntity의 응답 종류 : 200류 400류
+         - 생성 요청이었을 경우 : self 링크 제공
+         - 조회 요청이었을 경우 : update 링크 제공
+       2) Body에 content를 담아서 리턴할 때
+         -> java bean 스펙을 준수하는 클래스(도메인 객체들이나 DTO 객체들)은 serializing이 자동으로 되지만
+            errors객체는 그렇지 않기 때문에 ErrorsSerializer과 같은 클래스를 @JsonComponent로 등록해야함
+       3) Resource로 최종 데이터를 감싸주고 리턴 해주자 : JsonUnwrapped, links 용이
+         - 도메인형, 페이지형, 에러형
+         - Resources로 리스트형 Resource 클래스 묶기 : 일반 리스트로 리턴시 Map 구조가 아닌 그냥 리스트, 확장성 부족
+                                                 TODO : 불필요하게 키값으로 매핑되어있는 구조는 어떻게 해야할까
+         - PagedResources : assembler를 통해 page 정보(크기, 현재위치, 처음, 마지막 등) 및 이동 url을 링크형태로 제공
+                            Page객체를 Resources로 매핑시켜주는 역할이라고 생각하면 된다
      */
 
+    // Create
+    @PostMapping
+    public ResponseEntity createMatzip(@RequestBody @Valid MatzipDto matzipDto, Errors errors) {
+        // Validation 처리
+        if(errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(new ErrorsResource(errors));
+        }
+        matzipValidator.validate(matzipDto, errors);
+        if(errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(new ErrorsResource(errors));
+        }
+
+        // 추가 후 self 링크 생성
+        Matzip matzip = modelMapper.map(matzipDto, Matzip.class);
+        matzipService.save(matzip);
+        ControllerLinkBuilder self = linkTo(MatzipController.class).slash(matzip.getId());
+        URI uri = self.toUri();
+
+        MatzipResource matzipResource = new MatzipResource(matzip);
+        return ResponseEntity.created(uri).body(matzipResource);
+    }
+
+    // Read
     @GetMapping
     public ResponseEntity getMatzips() {
         List<Matzip> matzips = matzipService.findAll();
@@ -44,6 +84,7 @@ public class MatzipController {
         return ResponseEntity.ok(new Resources<>(matzipResources));
     }
 
+    // Read
     @GetMapping("/page")
     public ResponseEntity getMatzipsByPage(Pageable pageable,
                                            PagedResourcesAssembler<Matzip> assembler) {
@@ -52,6 +93,7 @@ public class MatzipController {
         return ResponseEntity.ok(pagedResources);
     }
 
+    // Read
     @GetMapping("/{id}")
     public ResponseEntity getMatzipById(@PathVariable("id") Integer id) {
         Optional<Matzip> optionalMatzip = matzipService.findOne(id);

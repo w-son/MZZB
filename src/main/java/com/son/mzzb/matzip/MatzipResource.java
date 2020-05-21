@@ -3,6 +3,8 @@ package com.son.mzzb.matzip;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
 public class MatzipResource extends Resource<Matzip> {
 
     /*
@@ -12,6 +14,7 @@ public class MatzipResource extends Resource<Matzip> {
      */
     public MatzipResource(Matzip matzip, Link... links) {
         super(matzip, links);
+        add(linkTo(MatzipController.class).slash(matzip.getId()).withSelfRel());
     }
 
 }
