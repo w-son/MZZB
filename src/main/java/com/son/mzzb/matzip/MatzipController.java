@@ -49,6 +49,14 @@ public class MatzipController {
                                                  TODO : 불필요하게 키값으로 매핑되어있는 구조는 어떻게 해야할까
          - PagedResources : assembler를 통해 page 정보(크기, 현재위치, 처음, 마지막 등) 및 이동 url을 링크형태로 제공
                             Page객체를 Resources로 매핑시켜주는 역할이라고 생각하면 된다
+
+       링크들
+       1) create : self, profile, matzips-all, matzips-bingo
+       2) 단건 read : self, profile, matzips-all, matzips-bingo
+          복수 read : 엔티티 각각 self, 페이지 관련 링크,
+       3) update : self, profile, matzips-all, matzips-bingo
+
+       TODO Rest Docs 적용, snippet 생성, profile 링크 추가
      */
 
     // Create
@@ -70,6 +78,8 @@ public class MatzipController {
         URI uri = self.toUri();
 
         MatzipResource matzipResource = new MatzipResource(matzip);
+        matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
+        matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
         return ResponseEntity.created(uri).body(matzipResource);
     }
 
@@ -102,6 +112,42 @@ public class MatzipController {
         }
         Matzip matzip = optionalMatzip.get();
         MatzipResource matzipResource = new MatzipResource(matzip);
+        matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
+        matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        return ResponseEntity.ok(matzipResource);
+    }
+
+    // Update
+    @PutMapping("/{id}")
+    public ResponseEntity updateMatzip(@PathVariable("id") Integer id,
+                                       @RequestBody @Valid MatzipDto matzipDto,
+                                       Errors errors) {
+
+        Optional<Matzip> optionalMatzip = matzipService.findOne(id);
+        if(optionalMatzip.isEmpty()) { // empty result
+            return ResponseEntity.notFound().build();
+        }
+        if(errors.hasErrors()) { // annotation validating
+            return ResponseEntity.badRequest().body(new ErrorsResource(errors));
+        }
+        matzipValidator.validate(matzipDto, errors);
+        if(errors.hasErrors()) { // customized validating
+            return ResponseEntity.badRequest().body(new ErrorsResource(errors));
+        }
+
+        /* Update에 관한 간략한 note
+         조회하는 로직을 여기서 썼기 때문에 Service 계층에 따로 update 로직을 짜지 않았음
+         optionalMatzip에 해당하는 id의 엔티티가 이미 Persistence Context에 올라와 있고
+         update 시킬 Matzip 정보를 그 id로 save 시키면
+         Repository단에서 Transaction이 끝날 시에 DB에 반영될 것이기 때문
+         */
+        Matzip matzip = optionalMatzip.get();
+        modelMapper.map(matzipDto, matzip);
+        Matzip updated = matzipService.save(matzip);
+
+        MatzipResource matzipResource = new MatzipResource(updated);
+        matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
+        matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
         return ResponseEntity.ok(matzipResource);
     }
 

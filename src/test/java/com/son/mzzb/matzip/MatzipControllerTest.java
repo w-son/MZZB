@@ -8,6 +8,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+import javax.swing.*;
 import java.io.InputStream;
 import java.util.stream.IntStream;
 
@@ -22,7 +23,7 @@ public class MatzipControllerTest extends BaseControllerTest {
     @Before
     public void setup() {
         // given
-        IntStream.range(0, 50).forEach(this::insertMatzip);
+        IntStream.range(0, 100).forEach(this::insertMatzip);
     }
 
     @Test
@@ -44,6 +45,8 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("id").exists())
                 .andExpect(jsonPath("_links.self").exists())
+                .andExpect(jsonPath("_links.Matzip-All").exists())
+                .andExpect(jsonPath("_links.Matzip-Bingo").exists())
                 .andExpect(status().isCreated());
     }
 
@@ -99,7 +102,7 @@ public class MatzipControllerTest extends BaseControllerTest {
         // when & then
         this.mockMvc.perform(get("/api/v1/matzip/page")
                             .param("page", "1")
-                            .param("size", "15")
+                            .param("size", "25")
                             .param("sort", "name,ASC"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -118,6 +121,8 @@ public class MatzipControllerTest extends BaseControllerTest {
         this.mockMvc.perform(get("/api/v1/matzip/{id}", 25))
                 .andDo(print())
                 .andExpect(jsonPath("_links.self").exists())
+                .andExpect(jsonPath("_links.Matzip-All").exists())
+                .andExpect(jsonPath("_links.Matzip-Bingo").exists())
                 .andExpect(status().isOk());
     }
 
@@ -128,6 +133,75 @@ public class MatzipControllerTest extends BaseControllerTest {
         this.mockMvc.perform(get("/api/v1/matzip/{id}", 1000))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @TestDescription("맛집 정보 정상 업데이트")
+    public void updateMatzip() throws Exception {
+        // given
+        Matzip matzip = matzipService.findOne(10).get();
+        String name = "Updated Matzip Name";
+        MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
+        matzipDto.setName(name);
+        // when & then
+        this.mockMvc.perform(put("/api/v1/matzip/{id}", matzip.getId())
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(objectMapper.writeValueAsString(matzipDto)))
+                .andDo(print())
+                .andExpect(jsonPath("_links.self").exists())
+                .andExpect(jsonPath("_links.Matzip-All").exists())
+                .andExpect(jsonPath("_links.Matzip-Bingo").exists())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @TestDescription("존재하지 않는 맛집 정보 업데이트")
+    public void unknownMatzipUpdate() throws Exception {
+        // given
+        Matzip matzip = Matzip.builder()
+                .id(1000)
+                .name("Random name")
+                .foodtype("Random type")
+                .price("1234")
+                .imgLink("Random link")
+                .build();
+        MatzipDto unknownDto = modelMapper.map(matzip, MatzipDto.class);
+        // when & then
+        this.mockMvc.perform(put("/api/v1/matzip/{id}", matzip.getId())
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(objectMapper.writeValueAsString(unknownDto)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @TestDescription("비어있는 업데이트 정보가 들어있는 경우")
+    public void emptyMatzipUpdate() throws Exception {
+        // given
+        Matzip matzip = matzipService.findOne(10).get();
+        MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
+        matzipDto.setName(null);
+        // when & then
+        this.mockMvc.perform(put("/api/v1/matzip/{id}", matzip.getId())
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(objectMapper.writeValueAsString(matzipDto)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @TestDescription("잘못된 업데이트 정보가 들어있는 경우")
+    public void wrongMatzipUpdate() throws Exception {
+        // given
+        Matzip matzip = matzipService.findOne(10).get();
+        MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
+        matzipDto.setPrice("가격");
+        // when & then
+        this.mockMvc.perform(put("/api/v1/matzip/{id}", matzip.getId())
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(objectMapper.writeValueAsString(matzipDto)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     private Matzip insertMatzip(int i) {
