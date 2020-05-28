@@ -12,14 +12,14 @@ sudo apt-get install docker.io
 - PostgreSQL
 ```
 > DB 이미지 생성
-docker run --name {컨테이너이름} -p {포트번호}:{포트번호} -e POSTGRES_PASSWORD={비밀번호} -d postgres
+sudo docker run --name {컨테이너이름} -p {포트번호}:{포트번호} -e POSTGRES_PASSWORD={비밀번호} -d postgres
 
 > PostgreSQL 실행, 종료
-docker start {컨테이너이름}
-docker stop {컨테이너이름}
+sudo docker start {컨테이너이름}
+sudo docker stop {컨테이너이름}
 
 > 컨테이너 접속
-docker exec -i -t {컨테이너이름} bash
+sudo docker exec -i -t {컨테이너이름} bash
 
 > PostgreSQL 접속
 psql -d postgres -U postgres
@@ -51,12 +51,16 @@ server.ssl.key-alias=tomcat
 sudo apt-get install maven
 
 > 패키징
-mvn package
+sudo mvn package
 
 > target 내 jar 실행
-nohup java -jar {jar 파일} &
+sudo nohup java -jar {jar 파일} &
 ```
 
 ## Notes
 
-Rest Docs 제대로 동작 안할 시 Lifecycle 의 package 다시 빌드
+- Rest Docs 제대로 동작 안할 시 Lifecycle 의 package 다시 빌드
+- 리눅스 단어 치환 명령어 
+```
+:%s/old/new/g
+```
