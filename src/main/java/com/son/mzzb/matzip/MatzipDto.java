@@ -19,6 +19,8 @@ public class MatzipDto {
     private String foodType;
     @NotNull
     private String price;
+    @NotNull
+    private String infoLink;
 
     private String imgLink;
 

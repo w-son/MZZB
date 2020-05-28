@@ -24,6 +24,8 @@ public class Matzip {
 
     private String price;
 
+    private String infoLink;
+
     private String imgLink;
 
 }

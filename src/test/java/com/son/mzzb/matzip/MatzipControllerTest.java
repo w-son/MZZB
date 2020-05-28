@@ -39,6 +39,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .name("가미우동")
                 .foodType("일식")
                 .price("10000")
+                .infoLink("some info link")
                 .imgLink("some image link")
                 .build();
         // when & then
@@ -61,6 +62,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                                 fieldWithPath("name").description("맛집 이름"),
                                 fieldWithPath("foodType").description("음식 분류"),
                                 fieldWithPath("price").description("가격대"),
+                                fieldWithPath("infoLink").description("맛집 정보 링크"),
                                 fieldWithPath("imgLink").description("맛집 이미지 링크")
                         ),
                         responseHeaders(
@@ -72,6 +74,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                                 fieldWithPath("name").description("맛집 이름"),
                                 fieldWithPath("foodType").description("음식 분류"),
                                 fieldWithPath("price").description("가격대"),
+                                fieldWithPath("infoLink").description("맛집 정보 링크"),
                                 fieldWithPath("imgLink").description("맛집 이미지 링크"),
                                 fieldWithPath("_links.self.href").description("맛집 단건 조회 및 수정이 가능한 링크"),
                                 fieldWithPath("_links.Matzip-All.href").description("맛집 전체 조회 링크"),
@@ -104,6 +107,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .name("가미우동")
                 .foodType("일식")
                 .price("가격")
+                .infoLink("some info link")
                 .imgLink("some image link")
                 .build();
         // when & then
@@ -173,6 +177,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                                 fieldWithPath("name").description("맛집 이름"),
                                 fieldWithPath("foodType").description("음식 분류"),
                                 fieldWithPath("price").description("가격대"),
+                                fieldWithPath("infoLink").description("맛집 정보 링크"),
                                 fieldWithPath("imgLink").description("맛집 이미지 링크"),
                                 fieldWithPath("_links.self.href").description("맛집 단건 조회 및 수정이 가능한 링크"),
                                 fieldWithPath("_links.Matzip-All.href").description("맛집 전체 조회 링크"),
@@ -218,6 +223,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                                 fieldWithPath("name").description("수정할 맛집 이름"),
                                 fieldWithPath("foodType").description("수정할 음식 분류"),
                                 fieldWithPath("price").description("수정할 가격대"),
+                                fieldWithPath("infoLink").description("맛집 정보 링크"),
                                 fieldWithPath("imgLink").description("맛집 이미지 링크")
                         ),
                         responseHeaders(
@@ -228,6 +234,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                                 fieldWithPath("name").description("수전된 맛집 이름"),
                                 fieldWithPath("foodType").description("수전된 음식 분류"),
                                 fieldWithPath("price").description("수정된 가격대"),
+                                fieldWithPath("infoLink").description("맛집 정보 링크"),
                                 fieldWithPath("imgLink").description("맛집 이미지 링크"),
                                 fieldWithPath("_links.self.href").description("맛집 단건 조회 및 수정이 가능한 링크"),
                                 fieldWithPath("_links.Matzip-All.href").description("맛집 전체 조회 링크"),
@@ -246,6 +253,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .name("Random name")
                 .foodType("Random type")
                 .price("1234")
+                .infoLink("Random link")
                 .imgLink("Random link")
                 .build();
         MatzipDto unknownDto = modelMapper.map(matzip, MatzipDto.class);
@@ -297,6 +305,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .name(i + "번쨰 맛집")
                 .foodType("Guitar")
                 .price("1234")
+                .infoLink("some info link")
                 .imgLink("some image link")
                 .build();
     }
