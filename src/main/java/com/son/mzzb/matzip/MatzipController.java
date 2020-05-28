@@ -56,7 +56,6 @@ public class MatzipController {
           복수 read : 엔티티 각각 self, 페이지 관련 링크,
        3) update : self, profile, matzips-all, matzips-bingo
 
-       TODO Rest Docs 적용, snippet 생성, profile 링크 추가
      */
 
     // Create

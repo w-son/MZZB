@@ -302,7 +302,7 @@ public class MatzipControllerTest extends BaseControllerTest {
 
     private Matzip buildMatzip(int i) {
         return Matzip.builder()
-                .name(i + "번쨰 맛집")
+                .name(i + "번째 맛집")
                 .foodType("Guitar")
                 .price("1234")
                 .infoLink("some info link")
