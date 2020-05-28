@@ -29,7 +29,7 @@ public class AppConfig {
             private void addMatzip(String name, String foodtype, String price, String imgLink) {
                 Matzip matzip = Matzip.builder()
                         .name(name)
-                        .foodtype(foodtype)
+                        .foodType(foodtype)
                         .price(price)
                         .imgLink(imgLink)
                         .build();

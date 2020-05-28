@@ -20,7 +20,7 @@ public class Matzip {
 
     private String name;
 
-    private String foodtype;
+    private String foodType;
 
     private String price;
 
