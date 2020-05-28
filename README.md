@@ -59,3 +59,4 @@ nohup java -jar {jar 파일} &
 
 ## Notes
 
+Rest Docs 제대로 동작 안할 시 Lifecycle 의 package 다시 빌드
