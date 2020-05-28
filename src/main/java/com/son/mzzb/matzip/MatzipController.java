@@ -79,6 +79,7 @@ public class MatzipController {
         MatzipResource matzipResource = new MatzipResource(matzip);
         matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
         matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        matzipResource.add(new Link("/docs/index.html#resources-matzip-create").withRel("profile"));
         return ResponseEntity.created(uri).body(matzipResource);
     }
 
@@ -113,6 +114,7 @@ public class MatzipController {
         MatzipResource matzipResource = new MatzipResource(matzip);
         matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
         matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        matzipResource.add(new Link("/docs/index.html#resources-matzip-get").withRel("profile"));
         return ResponseEntity.ok(matzipResource);
     }
 
@@ -147,6 +149,7 @@ public class MatzipController {
         MatzipResource matzipResource = new MatzipResource(updated);
         matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
         matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        matzipResource.add(new Link("/docs/index.html#resources-matzip-update").withRel("profile"));
         return ResponseEntity.ok(matzipResource);
     }
 
