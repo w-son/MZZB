@@ -1,13 +1,12 @@
 package com.son.mzzb.tmi;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface TmiRepository extends JpaRepository<Tmi, Integer> {
 
-    long countAll();
 
-    // Page<Tmi> findAll(Pageable pageable);
+    @Query("select count(t) from Tmi t")
+    long countAll();
 
 }

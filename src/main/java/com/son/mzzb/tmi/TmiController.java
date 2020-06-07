@@ -26,7 +26,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 public class TmiController {
     /*
      관련 내용은 모두 MatzipController에 주석으로 설명
-     TODO 테스트 코드 작성, Rest Docs 적용
+     TODO Rest Docs 적용 (Test, snippet)
      */
     private final TmiService tmiService;
     private final ModelMapper modelMapper;
@@ -80,7 +80,7 @@ public class TmiController {
         TmiResource tmiResource = new TmiResource(randomTmi);
         tmiResource.add(linkTo(TmiController.class).withRel("Tmi-All"));
         tmiResource.add(linkTo(TmiController.class).slash("random").withRel("Tmi-Random"));
-        return ResponseEntity.ok(randomTmi);
+        return ResponseEntity.ok(tmiResource);
     }
 
 }
