@@ -24,6 +24,8 @@ public class TmiControllerTest extends BaseControllerTest {
 
     @Before
     public void setUp() {
+        matzipRepository.deleteAll();
+        tmiRepository.deleteAll();
         IntStream.range(0, 10).forEach(this::insertTmi);
     }
 

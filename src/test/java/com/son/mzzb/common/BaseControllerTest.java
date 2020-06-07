@@ -3,6 +3,7 @@ package com.son.mzzb.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.son.mzzb.matzip.MatzipRepository;
 import com.son.mzzb.matzip.MatzipService;
+import com.son.mzzb.tmi.TmiRepository;
 import com.son.mzzb.tmi.TmiService;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
@@ -42,5 +43,11 @@ public class BaseControllerTest {
 
     @Autowired
     protected TmiService tmiService;
+
+    @Autowired
+    protected MatzipRepository matzipRepository;
+
+    @Autowired
+    protected TmiRepository tmiRepository;
 
 }

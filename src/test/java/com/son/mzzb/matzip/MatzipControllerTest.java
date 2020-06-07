@@ -27,7 +27,12 @@ public class MatzipControllerTest extends BaseControllerTest {
 
     @Before
     public void setup() {
-        // given
+        /*
+         현재 클래스 내 테스트 메서드 실행 전에
+         데이터 베이스 초기화 후 테스트 실행
+         */
+        matzipRepository.deleteAll();
+        tmiRepository.deleteAll();
         IntStream.range(0, 100).forEach(this::insertMatzip);
     }
 
@@ -162,7 +167,7 @@ public class MatzipControllerTest extends BaseControllerTest {
     @TestDescription("맛집 정보 단건 조회")
     public void getMatzip() throws Exception {
         // when & then
-        this.mockMvc.perform(get("/api/v1/matzip/{id}", 25))
+        this.mockMvc.perform(get("/api/v1/matzip/{id}", 50))
                 .andDo(print())
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Matzip-All").exists())
@@ -201,7 +206,7 @@ public class MatzipControllerTest extends BaseControllerTest {
     @TestDescription("맛집 정보 정상 업데이트")
     public void updateMatzip() throws Exception {
         // given
-        Matzip matzip = matzipService.findOne(10).get();
+        Matzip matzip = matzipService.findOne(50).get();
         String name = "Updated Matzip Name";
         String foodType = "Update food type";
         MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
@@ -273,7 +278,7 @@ public class MatzipControllerTest extends BaseControllerTest {
     @TestDescription("비어있는 업데이트 정보가 들어있는 경우")
     public void emptyMatzipUpdate() throws Exception {
         // given
-        Matzip matzip = matzipService.findOne(10).get();
+        Matzip matzip = matzipService.findOne(50).get();
         MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
         matzipDto.setName(null);
         // when & then
@@ -288,7 +293,7 @@ public class MatzipControllerTest extends BaseControllerTest {
     @TestDescription("잘못된 업데이트 정보가 들어있는 경우")
     public void wrongMatzipUpdate() throws Exception {
         // given
-        Matzip matzip = matzipService.findOne(10).get();
+        Matzip matzip = matzipService.findOne(50).get();
         MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
         matzipDto.setPrice("가격");
         // when & then
