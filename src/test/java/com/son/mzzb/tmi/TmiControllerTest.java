@@ -10,6 +10,11 @@ import org.springframework.http.MediaType;
 
 import java.util.stream.IntStream;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,7 +45,26 @@ public class TmiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Tmi-All").exists())
                 .andExpect(jsonPath("_links.Tmi-Random").exists())
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andDo(document("Create-Tmi",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("content type 헤더")
+                        ),
+                        requestFields(
+                                fieldWithPath("content").description("Tmi 정보")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.LOCATION).description("location 헤더"),
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("content type 헤더")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("Tmi 데이터 id"),
+                                fieldWithPath("content").description("Tmi 정보"),
+                                fieldWithPath("_links.self.href").description("생성한 Tmi 조회 링크"),
+                                fieldWithPath("_links.Tmi-All.href").description("Tmi 정보 리스트 조회 링크"),
+                                fieldWithPath("_links.Tmi-Random.href").description("무작위 Tmi 데이터 조회 링크")
+                        )
+                ));
     }
 
     @Test
@@ -71,7 +95,14 @@ public class TmiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.first").exists())
                 .andExpect(jsonPath("_links.last").exists())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("Get-Tmi",
+                        requestParameters(
+                                parameterWithName("page").description("Tmi 데이터의 페이지 인덱스"),
+                                parameterWithName("size").description("Tmi 데이터 페이지의 크기"),
+                                parameterWithName("sort").description("필요에 따라 정렬 조건을 적용")
+                        )
+                ));
     }
 
     @Test
@@ -85,7 +116,19 @@ public class TmiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Tmi-All").exists())
                 .andExpect(jsonPath("_links.Tmi-Random").exists())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("Get-Tmi-Random",
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("content type 헤더")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("무작위 Tmi 데이터 id"),
+                                fieldWithPath("content").description("무작위 Tmi 정보"),
+                                fieldWithPath("_links.self.href").description("현재 Tmi 조회 링크"),
+                                fieldWithPath("_links.Tmi-All.href").description("Tmi 정보 리스트 조회 링크"),
+                                fieldWithPath("_links.Tmi-Random.href").description("무작위 Tmi 데이터 조회 링크")
+                        )
+                ));
     }
 
     private Tmi insertTmi(int i) {

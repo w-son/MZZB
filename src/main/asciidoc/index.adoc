@@ -73,7 +73,7 @@ MZZB API의 사용자(클라이언트)는 URI를 직접 생성하지 않아야 �
 [[resources-matzip]]
 == Matzip
 
-Matzip 리소스는 이벤트를 만들거나 조회할 때 사용한다.
+Matzip 리소스는 맛집 정보를 만들거나 조회할 때 사용한다.
 
 [[resources-matzip-get]]
 === Matzip 조회
@@ -102,3 +102,23 @@ operation::Create-Matzip[snippets='http-request,http-response,response-fields']
 `PUT` 요청을 사용해서 기존 Matzip 정보를 수정할 수 있다.
 
 operation::Update-Matzip[snippets='http-request,http-response,response-fields']
+
+[[resources-tmi]]
+== Tmi
+
+Tmi 리소스는 Tmi 정보를 만들거나 조회할 때 사용한다.
+
+[[resources-tmi-get]]
+=== Tmi 조회
+
+`GET` 요청을 사용해서 무작위 Tmi 정보 하나를 조회할 수 있다.
+
+[[resources-tmi-list]]
+=== Tmi 목록 조회
+
+`GET` 요청을 사용해서 필요에 따라 조건을 부여하여 Tmi들을 조회할 수 있다.
+
+[[resources-tmi-create]]
+=== Tmi 생성
+
+`POST` 요청을 사용해서 새 Tmi를 DB에 삽입할 수 있다.
