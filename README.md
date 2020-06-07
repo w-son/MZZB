@@ -28,6 +28,35 @@ psql -d postgres -U postgres
 \dt
 ```
 
+## 배포
+
+- 요약 
+```
+> mvn 설치
+sudo apt-get install maven
+
+> 패키징
+sudo mvn package
+
+> target 내 jar 실행
+sudo nohup java -jar {jar 파일} &
+```
+- 배포 후 application.properties의 DB 설정 제대로 되었는지 확인
+- 서버 중지 시 'java'라고 되어 있는 프로세스 종료
+
+## Run Tests
+
+```
+> 패키지 내 모든 테스트 실행
+sudo mvn clean test
+
+> 특정 테스트 클래스 실행
+sudo mvn clean test -Dtest=com.son.mzzb.tmi.{클래스이름}
+
+> 특정 테스트 클래스의 특정 메서드 실행
+sudo mvn clean test -Dtest=com.son.mzzb.matzip.{클래스이름}#{메서드이름}
+```
+
 ## HTTPS 설정
 
 - keystore 생성 
@@ -41,20 +70,6 @@ server.ssl.key-store=keystore.p12
 server.ssl.key-store-password={비밀번호}
 server.ssl.key-store-type=PKCS12
 server.ssl.key-alias=tomcat
-```
-
-## JAR
-
-- 배포 요약 
-```
-> mvn 설치
-sudo apt-get install maven
-
-> 패키징
-sudo mvn package
-
-> target 내 jar 실행
-sudo nohup java -jar {jar 파일} &
 ```
 
 ## Notes
