@@ -45,6 +45,7 @@ public class TmiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Tmi-All").exists())
                 .andExpect(jsonPath("_links.Tmi-Random").exists())
+                .andExpect(jsonPath("_links.profile").exists())
                 .andExpect(status().isCreated())
                 .andDo(document("Create-Tmi",
                         requestHeaders(
@@ -62,7 +63,8 @@ public class TmiControllerTest extends BaseControllerTest {
                                 fieldWithPath("content").description("Tmi 정보"),
                                 fieldWithPath("_links.self.href").description("생성한 Tmi 조회 링크"),
                                 fieldWithPath("_links.Tmi-All.href").description("Tmi 정보 리스트 조회 링크"),
-                                fieldWithPath("_links.Tmi-Random.href").description("무작위 Tmi 데이터 조회 링크")
+                                fieldWithPath("_links.Tmi-Random.href").description("무작위 Tmi 데이터 조회 링크"),
+                                fieldWithPath("_links.profile.href").description("Tmi API 문서 링크")
                         )
                 ));
     }
@@ -116,6 +118,7 @@ public class TmiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Tmi-All").exists())
                 .andExpect(jsonPath("_links.Tmi-Random").exists())
+                .andExpect(jsonPath("_links.profile").exists())
                 .andExpect(status().isOk())
                 .andDo(document("Get-Tmi-Random",
                         responseHeaders(
@@ -126,7 +129,8 @@ public class TmiControllerTest extends BaseControllerTest {
                                 fieldWithPath("content").description("무작위 Tmi 정보"),
                                 fieldWithPath("_links.self.href").description("현재 Tmi 조회 링크"),
                                 fieldWithPath("_links.Tmi-All.href").description("Tmi 정보 리스트 조회 링크"),
-                                fieldWithPath("_links.Tmi-Random.href").description("무작위 Tmi 데이터 조회 링크")
+                                fieldWithPath("_links.Tmi-Random.href").description("무작위 Tmi 데이터 조회 링크"),
+                                fieldWithPath("_links.profile.href").description("Tmi API 문서 링크")
                         )
                 ));
     }

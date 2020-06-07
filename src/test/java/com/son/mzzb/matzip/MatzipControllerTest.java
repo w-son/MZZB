@@ -149,7 +149,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .andDo(document("Get-Matzip-Bingo",
                             requestParameters(
                                     parameterWithName("page")
-                                            .description("원하는 빙고 데이터 셋의 인덱스\n 응답 필드의 page에 전체 맛집 데이터에 대한 페이지 정보 조회 가능\n 응답 필드의 _links에 이전,다음,처음,마지막 빙고 데이터를 조회 가능한 링크"),
+                                            .description("원하는 빙고 데이터 셋의 인덱스를 담는 파라미터입니다 [예시] 10개의 데이터에 size를 5으로 설정하면 2개의 page 인덱스(0, 1) 이 존재합니다"),
                                     parameterWithName("size")
                                             .description("맛집 빙고에 들어가는 데이터의 개수"),
                                     parameterWithName("sort")
