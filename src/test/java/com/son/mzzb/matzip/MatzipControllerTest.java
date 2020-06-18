@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 
 import javax.swing.*;
 import java.io.InputStream;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
@@ -28,12 +29,17 @@ public class MatzipControllerTest extends BaseControllerTest {
     @Before
     public void setup() {
         /*
-         현재 클래스 내 테스트 메서드 실행 전에
-         데이터 베이스 초기화 후 테스트 실행
+         matzipRepository.deleteAll();
+         tmiRepository.deleteAll();
+
+         Before가 메서드가 시작하기 전에 실행되는 거라서
+         100개를 생성하는 로직이 메서드 10번에 모두 적용되면
+         마지막에는 1000개가 생긴다
          */
-        matzipRepository.deleteAll();
-        tmiRepository.deleteAll();
-        IntStream.range(0, 100).forEach(this::insertMatzip);
+        List<Matzip> check = matzipRepository.findAll();
+        if(check.isEmpty()) {
+            IntStream.range(0, 49).forEach(this::insertMatzip);
+        }
     }
 
     @Test
@@ -43,7 +49,7 @@ public class MatzipControllerTest extends BaseControllerTest {
         MatzipDto matzipDto = MatzipDto.builder()
                 .name("가미우동")
                 .foodType("일식")
-                .price("10000")
+                .price(10000)
                 .infoLink("some info link")
                 .imgLink("some image link")
                 .build();
@@ -113,7 +119,7 @@ public class MatzipControllerTest extends BaseControllerTest {
         MatzipDto matzipDto = MatzipDto.builder()
                 .name("가미우동")
                 .foodType("일식")
-                .price("가격")
+                .price(-1)
                 .infoLink("some info link")
                 .imgLink("some image link")
                 .build();
@@ -164,10 +170,42 @@ public class MatzipControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @TestDescription("조건을 포함한 맛집 조회")
+    public void getMatzipsByCondition() throws Exception {
+        // when & then
+        this.mockMvc.perform(get("/api/v1/matzip/conditions")
+                            .param("foodType", "foodType")
+                            .param("price", "1005"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @TestDescription("비어있는 조건을 파라미터로 요청하는 경우")
+    public void emptyCondition() throws Exception {
+        // when & then
+        this.mockMvc.perform(get("/api/v1/matzip/conditions")
+                .param("foodType", "foodType"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @TestDescription("잘못된 조건을 파라미터로 요청하는 경우")
+    public void wrongCondition() throws Exception {
+        // when & then
+        this.mockMvc.perform(get("/api/v1/matzip/conditions")
+                .param("foodType", "foodType")
+                .param("price", "-1"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @TestDescription("맛집 정보 단건 조회")
     public void getMatzip() throws Exception {
         // when & then
-        this.mockMvc.perform(get("/api/v1/matzip/{id}", 50))
+        this.mockMvc.perform(get("/api/v1/matzip/{id}", 10))
                 .andDo(print())
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Matzip-All").exists())
@@ -206,7 +244,7 @@ public class MatzipControllerTest extends BaseControllerTest {
     @TestDescription("맛집 정보 정상 업데이트")
     public void updateMatzip() throws Exception {
         // given
-        Matzip matzip = matzipService.findOne(50).get();
+        Matzip matzip = matzipService.findOne(10).get();
         String name = "Updated Matzip Name";
         String foodType = "Update food type";
         MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
@@ -261,7 +299,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .id(1000)
                 .name("Random name")
                 .foodType("Random type")
-                .price("1234")
+                .price(1234)
                 .infoLink("Random link")
                 .imgLink("Random link")
                 .build();
@@ -278,7 +316,7 @@ public class MatzipControllerTest extends BaseControllerTest {
     @TestDescription("비어있는 업데이트 정보가 들어있는 경우")
     public void emptyMatzipUpdate() throws Exception {
         // given
-        Matzip matzip = matzipService.findOne(50).get();
+        Matzip matzip = matzipService.findOne(10).get();
         MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
         matzipDto.setName(null);
         // when & then
@@ -293,9 +331,9 @@ public class MatzipControllerTest extends BaseControllerTest {
     @TestDescription("잘못된 업데이트 정보가 들어있는 경우")
     public void wrongMatzipUpdate() throws Exception {
         // given
-        Matzip matzip = matzipService.findOne(50).get();
+        Matzip matzip = matzipService.findOne(10).get();
         MatzipDto matzipDto = modelMapper.map(matzip, MatzipDto.class);
-        matzipDto.setPrice("가격");
+        matzipDto.setPrice(-1);
         // when & then
         this.mockMvc.perform(put("/api/v1/matzip/{id}", matzip.getId())
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -312,8 +350,8 @@ public class MatzipControllerTest extends BaseControllerTest {
     private Matzip buildMatzip(int i) {
         return Matzip.builder()
                 .name(i + "번째 맛집")
-                .foodType("Guitar")
-                .price("1234")
+                .foodType("foodType")
+                .price(1000 + i)
                 .infoLink("some info link")
                 .imgLink("some image link")
                 .build();

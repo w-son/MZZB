@@ -12,20 +12,12 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MatzipDto {
-
-    @NotNull
-    private String name;
+public class MatzipParams {
 
     @NotNull
     private String foodType;
 
     @NotNull @Min(0)
     private Integer price;
-
-    @NotNull
-    private String infoLink;
-
-    private String imgLink;
 
 }

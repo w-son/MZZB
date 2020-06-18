@@ -26,6 +26,10 @@ public class MatzipService {
 
     public Page<Matzip> findAllByPage(Pageable pageable) { return matzipRepository.findAll(pageable); }
 
+    public List<Matzip> findAllByConditions(String foodType, Integer price) {
+        return matzipRepository.findConditionsMatzip(foodType, price);
+    }
+
     public Optional<Matzip> findOne(Integer id) {
         return matzipRepository.findById(id);
     }

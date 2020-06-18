@@ -15,16 +15,15 @@ public class MatzipRepositoryTest extends BaseControllerTest {
     @Before
     public void setup() {
         matzipRepository.deleteAll();
-        tmiRepository.deleteAll();
         IntStream.range(0, 5).forEach(this::insertMatzip);
     }
 
     @Test
-    @TestDescription("findConditionalMatzip 테스트")
-    public void findConditionalMatzip() throws Exception {
+    @TestDescription("findOptionalMatzip 테스트")
+    public void findOptionalMatzip() throws Exception {
         // when
-        List<Matzip> list1 = matzipRepository.findConditionalMatzip("한식", "6000");
-        List<Matzip> list2 = matzipRepository.findConditionalMatzip("중식", "6000");
+        List<Matzip> list1 = matzipRepository.findOptionsMatzip("한식", 6000);
+        List<Matzip> list2 = matzipRepository.findOptionsMatzip("중식", 6000);
 
         // then
         for(Matzip matzip : list1) {
@@ -41,8 +40,8 @@ public class MatzipRepositoryTest extends BaseControllerTest {
     @TestDescription("인자 하나가 없는 경우")
     public void emptyParameters() throws Exception {
         // when
-        List<Matzip> list1 = matzipRepository.findConditionalMatzip("한식", null);
-        List<Matzip> list2 = matzipRepository.findConditionalMatzip(null, "6000");
+        List<Matzip> list1 = matzipRepository.findOptionsMatzip("한식", null);
+        List<Matzip> list2 = matzipRepository.findOptionsMatzip(null, 6000);
 
         // then
         for (Matzip matzip : list1) {
@@ -59,9 +58,9 @@ public class MatzipRepositoryTest extends BaseControllerTest {
     @TestDescription("fMBFTAPLTE 테스트")
     public void fMBFTAPLTE() throws Exception {
         // when
-        List<Matzip> list1 = matzipRepository.findMatzipByFoodTypeAndPriceLessThanEqual("한식", "6001");
-        List<Matzip> list2 = matzipRepository.findMatzipByFoodTypeAndPriceLessThanEqual("일식", "6004");
-        List<Matzip> list3 = matzipRepository.findMatzipByFoodTypeAndPriceLessThanEqual("한식", "100");
+        List<Matzip> list1 = matzipRepository.findConditionsMatzip("한식", 6001);
+        List<Matzip> list2 = matzipRepository.findConditionsMatzip("일식", 6004);
+        List<Matzip> list3 = matzipRepository.findConditionsMatzip("한식", 100);
 
         // then
         for(Matzip matzip : list1) {
@@ -90,7 +89,7 @@ public class MatzipRepositoryTest extends BaseControllerTest {
         return Matzip.builder()
                 .name(i + "번째 맛집")
                 .foodType("한식")
-                .price("600" + i)
+                .price(6000 + i)
                 .infoLink("some info link")
                 .imgLink("some image link")
                 .build();

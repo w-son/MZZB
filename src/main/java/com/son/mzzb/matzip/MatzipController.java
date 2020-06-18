@@ -1,12 +1,10 @@
 package com.son.mzzb.matzip;
 
 import com.son.mzzb.common.ErrorsResource;
-import jdk.jfr.Event;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.*;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -28,7 +26,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 public class MatzipController {
 
     private final MatzipService matzipService;
-    private final MatzipValidator matzipValidator;
+    private final MatzipDtoValidator matzipDtoValidator;
+    private final MatzipParamsValidator matzipParamsValidator;
     private final ModelMapper modelMapper;
 
     /*
@@ -65,10 +64,12 @@ public class MatzipController {
         if(errors.hasErrors()) {
             return ResponseEntity.badRequest().body(new ErrorsResource(errors));
         }
-        matzipValidator.validate(matzipDto, errors);
+        /* Deprecated
+        matzipDtoValidator.validate(matzipDto, errors);
         if(errors.hasErrors()) {
             return ResponseEntity.badRequest().body(new ErrorsResource(errors));
         }
+        */
 
         // 추가 후 self 링크 생성
         Matzip matzip = modelMapper.map(matzipDto, Matzip.class);
@@ -104,6 +105,37 @@ public class MatzipController {
     }
 
     // Read
+    @GetMapping("/conditions")
+    public ResponseEntity getMatzipsByConditions(@Valid @ModelAttribute MatzipParams matzipParams, Errors errors) {
+
+        /*
+         Validation과정에 errors를 담기 위해서
+         Query String을 @RequestParam 형태로 받지 않고
+         MatzipParams에 받았음
+         */
+        if(errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(new ErrorsResource(errors));
+        }
+
+        /* Deprecated
+        matzipParamsValidator.validate(matzipParams, errors);
+        if(errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(new ErrorsResource(errors));
+        }
+        */
+
+        String foodType = matzipParams.getFoodType();
+        Integer price = matzipParams.getPrice();
+        List<Matzip> matzips = matzipService.findAllByConditions(foodType, price);
+        List<MatzipResource> matzipResources = new ArrayList<>();
+        for(Matzip matzip : matzips) {
+            matzipResources.add(new MatzipResource(matzip));
+        }
+
+        return ResponseEntity.ok(new Resources<>(matzipResources));
+    }
+
+    // Read
     @GetMapping("/{id}")
     public ResponseEntity getMatzipById(@PathVariable("id") Integer id) {
         Optional<Matzip> optionalMatzip = matzipService.findOne(id);
@@ -131,10 +163,13 @@ public class MatzipController {
         if(errors.hasErrors()) { // annotation validating
             return ResponseEntity.badRequest().body(new ErrorsResource(errors));
         }
-        matzipValidator.validate(matzipDto, errors);
+
+        /* Deprecated
+        matzipDtoValidator.validate(matzipDto, errors);
         if(errors.hasErrors()) { // customized validating
             return ResponseEntity.badRequest().body(new ErrorsResource(errors));
         }
+        */
 
         /* Update에 관한 간략한 note
          조회하는 로직을 여기서 썼기 때문에 Service 계층에 따로 update 로직을 짜지 않았음

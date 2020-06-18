@@ -26,7 +26,7 @@ public class AppConfig {
             @Autowired MatzipService matzipService;
             @Autowired TmiService tmiService;
 
-            private void addMatzip(String name, String foodtype, String price, String imgLink) {
+            private void addMatzip(String name, String foodtype, Integer price, String imgLink) {
                 Matzip matzip = Matzip.builder()
                         .name(name)
                         .foodType(foodtype)
