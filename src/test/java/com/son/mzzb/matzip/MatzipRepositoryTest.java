@@ -4,8 +4,6 @@ import com.son.mzzb.common.BaseControllerTest;
 import com.son.mzzb.common.TestDescription;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -22,7 +20,7 @@ public class MatzipRepositoryTest extends BaseControllerTest {
     }
 
     @Test
-    @TestDescription("정상적으로 음식 종류와 가격을 인자를 입력으로 넣은 경우")
+    @TestDescription("findConditionalMatzip 테스트")
     public void findConditionalMatzip() throws Exception {
         // when
         List<Matzip> list1 = matzipRepository.findConditionalMatzip("한식", "6000");
@@ -55,6 +53,32 @@ public class MatzipRepositoryTest extends BaseControllerTest {
         }
         assertEquals(0, list1.size());
         assertEquals(0, list2.size());
+    }
+
+    @Test
+    @TestDescription("fMBFTAPLTE 테스트")
+    public void fMBFTAPLTE() throws Exception {
+        // when
+        List<Matzip> list1 = matzipRepository.findMatzipByFoodTypeAndPriceLessThanEqual("한식", "6001");
+        List<Matzip> list2 = matzipRepository.findMatzipByFoodTypeAndPriceLessThanEqual("일식", "6004");
+        List<Matzip> list3 = matzipRepository.findMatzipByFoodTypeAndPriceLessThanEqual("한식", "100");
+
+        // then
+        for(Matzip matzip : list1) {
+            System.out.println(matzip.getName());
+        }
+
+        for(Matzip matzip : list2) {
+            System.out.println(matzip.getName());
+        }
+
+        for(Matzip matzip : list2) {
+            System.out.println(matzip.getName());
+        }
+
+        assertEquals(2, list1.size());
+        assertEquals(0, list2.size());
+        assertEquals(0, list3.size());
     }
 
     private Matzip insertMatzip(int i) {
