@@ -177,7 +177,13 @@ public class MatzipControllerTest extends BaseControllerTest {
                             .param("foodType", "foodType")
                             .param("price", "1005"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("Get-Matzip-By-Conditions",
+                        requestParameters(
+                                parameterWithName("foodType").description("음식 종류에 대한 파라미터입니다"),
+                                parameterWithName("price").description("가격에 대한 파라미터입니다")
+                        )
+                ));
     }
 
     @Test
