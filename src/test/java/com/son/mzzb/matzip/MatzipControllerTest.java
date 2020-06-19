@@ -35,6 +35,9 @@ public class MatzipControllerTest extends BaseControllerTest {
          Before가 메서드가 시작하기 전에 실행되는 거라서
          100개를 생성하는 로직이 메서드 10번에 모두 적용되면
          마지막에는 1000개가 생긴다
+
+         + 모든 테스트를 같이 돌리면 이게 전부 공유가 된다
+         따라서 MatzipRepositoryTest에서 Before로 5개를 생성해놓으면 여기 코드는 실행이 안된다
          */
         List<Matzip> check = matzipRepository.findAll();
         if(check.isEmpty()) {
@@ -64,6 +67,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Matzip-All").exists())
                 .andExpect(jsonPath("_links.Matzip-Bingo").exists())
+                .andExpect(jsonPath("_links.Matzip-Conditions").exists())
                 .andExpect(jsonPath("_links.profile").exists())
                 .andExpect(status().isCreated())
                 .andDo(document("Create-Matzip",
@@ -91,6 +95,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                                 fieldWithPath("_links.self.href").description("맛집 단건 조회 및 수정이 가능한 링크"),
                                 fieldWithPath("_links.Matzip-All.href").description("맛집 전체 조회 링크"),
                                 fieldWithPath("_links.Matzip-Bingo.href").description("맛집 빙고 데이터 조회 링크"),
+                                fieldWithPath("_links.Matzip-Conditions.href").description("조건을 포함하는 맛집 데이터 조회"),
                                 fieldWithPath("_links.profile.href").description("Matzip API 문서 링크")
                         )
                 ));
@@ -140,7 +145,11 @@ public class MatzipControllerTest extends BaseControllerTest {
         // when & then
         this.mockMvc.perform(get("/api/v1/matzip"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.matzipList").exists())
+                .andExpect(jsonPath("_links.Matzip-All.href").exists())
+                .andExpect(jsonPath("_links.Matzip-Bingo.href").exists())
+                .andExpect(jsonPath("_links.Matzip-Conditions.href").exists());
     }
 
     @Test
@@ -175,9 +184,14 @@ public class MatzipControllerTest extends BaseControllerTest {
         // when & then
         this.mockMvc.perform(get("/api/v1/matzip/conditions")
                             .param("foodType", "foodType")
-                            .param("price", "1005"))
+                            .param("price", "1004"))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.matzipList").exists())
+                .andExpect(jsonPath("_links.Matzip-All.href").exists())
+                .andExpect(jsonPath("_links.Matzip-Bingo.href").exists())
+                .andExpect(jsonPath("_links.Matzip-Conditions.href").exists())
+                .andExpect(jsonPath("_links.profile.href").exists())
                 .andDo(document("Get-Matzip-By-Conditions",
                         requestParameters(
                                 parameterWithName("foodType").description("음식 종류에 대한 파라미터입니다"),
@@ -216,6 +230,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Matzip-All").exists())
                 .andExpect(jsonPath("_links.Matzip-Bingo").exists())
+                .andExpect(jsonPath("_links.Matzip-Conditions").exists())
                 .andExpect(jsonPath("_links.profile").exists())
                 .andExpect(status().isOk())
                 .andDo(document("Get-Matzip",
@@ -232,6 +247,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                                 fieldWithPath("_links.self.href").description("맛집 단건 조회 및 수정이 가능한 링크"),
                                 fieldWithPath("_links.Matzip-All.href").description("맛집 전체 조회 링크"),
                                 fieldWithPath("_links.Matzip-Bingo.href").description("맛집 빙고 데이터 조회 링크"),
+                                fieldWithPath("_links.Matzip-Conditions.href").description("조건을 포함하는 맛집 데이터 조회"),
                                 fieldWithPath("_links.profile.href").description("Matzip API 문서 링크")
                         )
                 ));
@@ -265,6 +281,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.Matzip-All").exists())
                 .andExpect(jsonPath("_links.Matzip-Bingo").exists())
+                .andExpect(jsonPath("_links.Matzip-Conditions").exists())
                 .andExpect(jsonPath("_links.profile").exists())
                 .andExpect(status().isOk())
                 .andDo(document("Update-Matzip",
@@ -291,6 +308,7 @@ public class MatzipControllerTest extends BaseControllerTest {
                                 fieldWithPath("_links.self.href").description("맛집 단건 조회 및 수정이 가능한 링크"),
                                 fieldWithPath("_links.Matzip-All.href").description("맛집 전체 조회 링크"),
                                 fieldWithPath("_links.Matzip-Bingo.href").description("맛집 빙고 데이터 조회 링크"),
+                                fieldWithPath("_links.Matzip-Conditions.href").description("조건을 포함하는 맛집 데이터 조회"),
                                 fieldWithPath("_links.profile.href").description("Matzip API 문서 링크")
                         )
                 ));

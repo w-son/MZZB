@@ -50,10 +50,11 @@ public class MatzipController {
                             Page객체를 Resources로 매핑시켜주는 역할이라고 생각하면 된다
 
        링크들
-       1) create : self, profile, matzips-all, matzips-bingo
-       2) 단건 read : self, profile, matzips-all, matzips-bingo
-          복수 read : 엔티티 각각 self, 페이지 관련 링크,
-       3) update : self, profile, matzips-all, matzips-bingo
+       1) create : self, profile, matzips-all, matzips-bingo, matzips-conditions
+       2) 단건 read : self, profile, matzips-all, matzips-bingo, matzips-conditions
+          빙고 read : 엔티티 각각 self, 페이지 관련 링크
+          조건 read : 엔티티 각각 self, profile, matzips-all, matzips-bingo, matzips-conditions
+       3) update : self, profile, matzips-all, matzips-bingo, matzips-conditions
 
      */
 
@@ -80,6 +81,7 @@ public class MatzipController {
         MatzipResource matzipResource = new MatzipResource(matzip);
         matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
         matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        matzipResource.add(linkTo(MatzipController.class).slash("conditions").withRel("Matzip-Conditions"));
         matzipResource.add(new Link("/docs/index.html#resources-matzip-create").withRel("profile"));
         return ResponseEntity.created(uri).body(matzipResource);
     }
@@ -92,7 +94,12 @@ public class MatzipController {
         for(Matzip matzip : matzips) {
             matzipResources.add(new MatzipResource(matzip));
         }
-        return ResponseEntity.ok(new Resources<>(matzipResources));
+
+        Resources<MatzipResource> resources = new Resources<>(matzipResources);
+        resources.add(linkTo(MatzipController.class).withRel("Matzip-All"));
+        resources.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        resources.add(linkTo(MatzipController.class).slash("conditions").withRel("Matzip-Conditions"));
+        return ResponseEntity.ok(resources);
     }
 
     // Read
@@ -132,7 +139,12 @@ public class MatzipController {
             matzipResources.add(new MatzipResource(matzip));
         }
 
-        return ResponseEntity.ok(new Resources<>(matzipResources));
+        Resources<MatzipResource> resources = new Resources<>(matzipResources);
+        resources.add(linkTo(MatzipController.class).withRel("Matzip-All"));
+        resources.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        resources.add(linkTo(MatzipController.class).slash("conditions").withRel("Matzip-Conditions"));
+        resources.add(new Link("/docs/index.html#resources-get-matzip-by-conditions").withRel("profile"));
+        return ResponseEntity.ok(resources);
     }
 
     // Read
@@ -146,6 +158,7 @@ public class MatzipController {
         MatzipResource matzipResource = new MatzipResource(matzip);
         matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
         matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        matzipResource.add(linkTo(MatzipController.class).slash("conditions").withRel("Matzip-Conditions"));
         matzipResource.add(new Link("/docs/index.html#resources-matzip-get").withRel("profile"));
         return ResponseEntity.ok(matzipResource);
     }
@@ -184,6 +197,7 @@ public class MatzipController {
         MatzipResource matzipResource = new MatzipResource(updated);
         matzipResource.add(linkTo(MatzipController.class).withRel("Matzip-All"));
         matzipResource.add(linkTo(MatzipController.class).slash("page").withRel("Matzip-Bingo"));
+        matzipResource.add(linkTo(MatzipController.class).slash("conditions").withRel("Matzip-Conditions"));
         matzipResource.add(new Link("/docs/index.html#resources-matzip-update").withRel("profile"));
         return ResponseEntity.ok(matzipResource);
     }

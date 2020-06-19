@@ -14,7 +14,7 @@
 맛집 족보 FE 서버와 통신하기 위한 REST API 입니다.
 
 [[overview-http-verbs]]
-== HTTP 동사
+== HTTP Method
 
 MZZB API에서 사용하는 HTTP 동사는 표준 HTTP와 REST 규약을 따릅니다.
 
@@ -82,10 +82,17 @@ Matzip 리소스는 맛집 정보를 만들거나 조회할 때 사용한다.
 
 operation::Get-Matzip[snippets='http-request,http-response,response-fields']
 
-[[resources-matzip-list]]
-=== Matzip 목록 조회
+[[resources-get-matzip-by-conditions]]
+=== Matzip 조건 조회
 
-`GET` 요청을 사용하여 필요에 따라 조건을 부여하여 Matzip들을 조회할 수 있다.
+'GET' 요청을 사용해서 음식 종류, 가격대에 조건을 부여해 그에 알맞는 Matzip을 조회할 수 있다.
+
+operation::Get-Matzip-By-Conditions[snippets='http-request,request-parameters,http-response']
+
+[[resources-matzip-list]]
+=== Matzip 빙고 조회
+
+`GET` 요청을 사용하여 Bingo 생성을 위한 Matzip 정보들을 조회할 수 있다.
 
 operation::Get-Matzip-Bingo[snippets='http-request,request-parameters,http-response']
 
