@@ -1,6 +1,6 @@
 package com.son.mzzb.matzip;
 
-import com.son.mzzb.common.BaseControllerTest;
+import com.son.mzzb.common.BaseTest;
 import com.son.mzzb.common.TestDescription;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,12 +8,9 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import javax.swing.*;
-import java.io.InputStream;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -24,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-public class MatzipControllerTest extends BaseControllerTest {
+public class MatzipControllerTest extends BaseTest {
 
     @Before
     public void setup() {

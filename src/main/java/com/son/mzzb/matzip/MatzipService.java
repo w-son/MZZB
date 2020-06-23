@@ -1,6 +1,8 @@
 package com.son.mzzb.matzip;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,12 @@ public class MatzipService {
 
     private final MatzipRepository matzipRepository;
 
+    @CacheEvict(value = "findAll")
     public Matzip save(Matzip matzip) {
         return matzipRepository.save(matzip);
     }
 
+    @Cacheable(value = "findAll")
     public List<Matzip> findAll() {
         return matzipRepository.findAll();
     }

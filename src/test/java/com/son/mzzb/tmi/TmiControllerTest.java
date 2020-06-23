@@ -1,6 +1,6 @@
 package com.son.mzzb.tmi;
 
-import com.son.mzzb.common.BaseControllerTest;
+import com.son.mzzb.common.BaseTest;
 import com.son.mzzb.common.TestDescription;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class TmiControllerTest extends BaseControllerTest {
+public class TmiControllerTest extends BaseTest {
 
     @Before
     public void setUp() {

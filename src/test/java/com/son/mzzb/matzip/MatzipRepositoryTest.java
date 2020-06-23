@@ -1,6 +1,6 @@
 package com.son.mzzb.matzip;
 
-import com.son.mzzb.common.BaseControllerTest;
+import com.son.mzzb.common.BaseTest;
 import com.son.mzzb.common.TestDescription;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
-public class MatzipRepositoryTest extends BaseControllerTest {
+public class MatzipRepositoryTest extends BaseTest {
 
     @Before
     public void setup() {
