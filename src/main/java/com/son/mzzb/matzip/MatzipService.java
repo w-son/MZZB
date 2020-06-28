@@ -18,13 +18,14 @@ public class MatzipService {
 
     private final MatzipRepository matzipRepository;
 
-    @CacheEvict(value = "findAll")
+    @CacheEvict(value = "findAllMatzip")
     public Matzip save(Matzip matzip) {
         return matzipRepository.save(matzip);
     }
 
-    @Cacheable(value = "findAll")
+    @Cacheable(value = "findAllMatzip")
     public List<Matzip> findAll() {
+        System.out.println("Cache 생성 확인용 메서드 호출 로그");
         return matzipRepository.findAll();
     }
 

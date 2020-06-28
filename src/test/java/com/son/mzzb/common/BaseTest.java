@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,6 +39,9 @@ public class BaseTest {
     // model to DTO mapping
     @Autowired
     protected ModelMapper modelMapper;
+
+    @Autowired
+    protected CacheManager cacheManager;
 
     @Autowired
     protected MatzipService matzipService;
